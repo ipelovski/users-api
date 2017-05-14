@@ -9,7 +9,7 @@ const router = require('./routes/index');
 
 const publicDirPath = path.resolve(__dirname, 'public');
 const app = new Koa();
-const port = process.env.$PORT || config.port;
+const port = process.env.PORT || config.port;
 
 app.use(async (ctx, next) => {
   try {
