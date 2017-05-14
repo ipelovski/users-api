@@ -27,13 +27,6 @@ const usersRepository = {
     this.users = new Data();
     return this.all();
   },
-  add(user) {
-    return m.request({
-      method: 'post',
-      url: apiAddress + '/users',
-      data: user.value
-    }).then(() => this.reload());
-  },
   get(id) {
     if (this.users.hasValue()) {
       if (this.users.value.has(id)) {
@@ -56,6 +49,19 @@ const usersRepository = {
 
       return Data.pending();
     }
+  },
+  search(text) {
+    return m.request({
+      method: 'get',
+      url: apiAddress + '/users/search/' + text
+    }).then((value) => Data.withValue(this.listToMap(value)));
+  },
+  add(user) {
+    return m.request({
+      method: 'post',
+      url: apiAddress + '/users',
+      data: user.value
+    }).then(() => this.reload());
   },
   update(user) {
     return m.request({

@@ -5,13 +5,16 @@ const userValidator = require('./user-validator');
 const validate = require('../lib/validate').validate;
 
 const ajv = new Ajv();
-const positiveInteger = ajv.compile({
+const isPositiveInteger = ajv.compile({
   type: 'integer',
   minimum: 1
 });
-const positiveIntegerOrZero = ajv.compile({
+const isPositiveIntegerOrZero = ajv.compile({
   type: 'integer',
   minimum: 0
+});
+const isString = ajv.compile({
+  type: 'string'
 });
 
 const users = [];
@@ -20,15 +23,8 @@ const repository = {
   async all() {
     return users;
   },
-  async add(user) {
-    validate(user, userValidator);
-    user.id = users.length;
-    user.created = user.updated = Date.now();
-    users.push(user);
-    return user;
-  },
   async get(id) {
-    validate(id, positiveIntegerOrZero);
+    validate(id, isPositiveIntegerOrZero);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
       return users[index];
@@ -36,8 +32,25 @@ const repository = {
       return null;
     }
   },
+  async search(text) {
+    validate(text, isString);
+    let pattern = new RegExp('.*' + text + '.*', 'i');
+    let filteredUsers = users.filter((user) => {
+      return pattern.test(user.forename) ||
+        pattern.test(user.surname) ||
+        pattern.test(user.email);
+    });
+    return filteredUsers;
+  },
+  async add(user) {
+    validate(user, userValidator);
+    user.id = users.length;
+    user.created = user.updated = Date.now();
+    users.push(user);
+    return user;
+  },
   async update(id, user) {
-    validate(id, positiveIntegerOrZero);
+    validate(id, isPositiveIntegerOrZero);
     validate(user, userValidator);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
@@ -51,7 +64,7 @@ const repository = {
     }
   },
   async delete(id) {
-    validate(id, positiveIntegerOrZero);
+    validate(id, isPositiveIntegerOrZero);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
       users.splice(index, 1);
@@ -60,7 +73,7 @@ const repository = {
     }
   },
   async populate(count) {
-    validate(count, positiveInteger);
+    validate(count, isPositiveInteger);
     while (count--) {
       await this.add(randomUser());
     }

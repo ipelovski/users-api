@@ -1,6 +1,7 @@
 'use strict';
 
 const ViewModel = require('../view-model');
+const back = require('./back');
 
 const userForm = {
   oninit(vnode) {
@@ -55,13 +56,13 @@ const userForm = {
         // m('button', { onclick: this.submit.bind(this) }, 'Add')
         vnode.attrs.buttons
       ]),
-      m('a[href=/]', {oncreate: m.route.link}, 'Back')
+      m(back),
     ];
   },
   submit(e) {
     e.preventDefault();
     this.onSubmit(this.userVM);
-  }
+  },
 };
 
 module.exports = userForm;

@@ -15,6 +15,11 @@ router.post('/', async (ctx) => {
   ctx.status = 201;
 });
 
+router.get('/search/:text?', async (ctx) => {
+  let text = ctx.params.text || '';
+  ctx.body = await usersData.search(text);
+});
+
 router.get('/:id', async (ctx) => {
   let id = parseInt(ctx.params.id, 10);
   let user = await usersData.get(id);

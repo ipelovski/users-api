@@ -14,8 +14,8 @@ chai.use(chaiHttp);
 function generateUser() {
   return {
     forename: 'Pesho',
-    surname: 'Goshev',
-    email: 'pesho.goshev@goshov.com',
+    surname: 'Goshkov',
+    email: 'pesho.goshkov@goshkov.com',
   };
 }
 
@@ -52,6 +52,48 @@ describe('Users', function () {
       let user = res.body;
       expect(user).to.have.property('id');
       expect(user.id).to.equal(userId);
+    });
+
+    it('should find a specific user', async function () {
+
+      let usersCount = 5;
+      await users.populate(usersCount);
+      let storedUser = await users.add(generateUser());
+
+      let res = await chai.request(url)
+        .get('/api/users/search/' + storedUser.email);
+      
+      expect(res).to.have.status(200);
+      let foundUsers = res.body;
+      expect(foundUsers).to.have.length(1);
+      let user = foundUsers[0];
+      expect(user).to.deep.equal(storedUser);
+    });
+
+    it('should find no users', async function () {
+
+      let usersCount = 5;
+      await users.populate(usersCount);
+
+      let res = await chai.request(url)
+        .get('/api/users/search/zzzz');
+      
+      expect(res).to.have.status(200);
+      let foundUsers = res.body;
+      expect(foundUsers).to.have.length(0);
+    });
+
+    it('should find all users', async function () {
+
+      let usersCount = 5;
+      await users.populate(usersCount);
+
+      let res = await chai.request(url)
+        .get('/api/users/search/');
+      
+      expect(res).to.have.status(200);
+      let foundUsers = res.body;
+      expect(foundUsers).to.have.length(usersCount);
     });
 
     it('should fail for non existing user', async function () {
