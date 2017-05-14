@@ -27,7 +27,7 @@ router.get('/', (ctx) => {
 router.use('/users', usersRouter.routes(), usersRouter.allowedMethods());
 
 router.use('/', (ctx) => {
-  ctx.throw('Not found', 404);
+  ctx.throw(404, 'Not found');
 });
 
 module.exports = router;

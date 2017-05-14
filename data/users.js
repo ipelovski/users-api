@@ -24,6 +24,7 @@ const repository = {
     validate(user, userValidator);
     user.id = users.length;
     users.push(user);
+    return user;
   },
   async get(id) {
     validate(id, positiveIntegerOrZero);
@@ -39,40 +40,57 @@ const repository = {
     validate(user, userValidator);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
-      userValidator
       Object.assign(users[index], user);
-      return true;
     } else {
-      return false;
+      throw new Error('Not found');
     }
   },
-  async remove(id) {
+  async delete(id) {
     validate(id, positiveIntegerOrZero);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
       users.splice(index, 1);
-      return true;
     } else {
-      return false;
+      throw new Error('Not found');
     }
   },
   async populate(count) {
     validate(count, positiveInteger);
     while (count--) {
-      await this.add({
-        forename: 'Toshko',
-        surname: 'Goshkov',
-        email: 'toshko.goshkov@gmail.com'
-      });
+      await this.add(randomUser());
     }
-    // await this.add({
-    //   forename: 'Goshko',
-    //   surname: 'Toshkov',
-    //   email: 'goshko.toshkov@gmail.com'
-    // });
-  }
+  },
+  async clear() {
+    users.length = 0;
+  },
 };
 
-repository.populate(5).catch(console.error.bind(null, 'Population error:'));
+const forenames = `Tosho Gosho Racho Tzonko Petko Tzvetko Risto Kozma
+Penko Pencho Velyo Mityo Simo Nedko Mancho Haralampiy`.split(/\s/);
+const surnames = `Toshev Goshev Rachev Tzonkov Petkov Tzvetkov Ristov Kozmov
+Penkov Penchev Velyov Mitev Simov Nedkov Manchov Haralampiev`.split(/\s/);
+function randomUser() {
+  let forename = forenames[getRandomInt(forenames.length)];
+  let surname = surnames[getRandomInt(surnames.length)];
+  let email = `${forename.toLowerCase()}.${surname.toLowerCase()}@users.com`;
+  return {
+    forename,
+    surname,
+    email,
+  };
+}
+
+function getRandomInt(min, max) {
+  if (typeof max !== 'undefined') {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+  } else {
+    max = Math.floor(min);
+    min = 0;
+  }
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// repository.populate(5).catch(console.error.bind(null, 'Population error:'));
 
 module.exports = repository;

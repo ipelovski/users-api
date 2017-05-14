@@ -12,6 +12,7 @@ router.get('/', async (ctx) => {
 router.post('/', async (ctx) => {
   let user = ctx.request.body;
   ctx.body = await usersData.add(user);
+  ctx.status = 201;
 });
 
 router.get('/:id', async (ctx) => {
@@ -20,34 +21,43 @@ router.get('/:id', async (ctx) => {
   if (user !== null) {
     ctx.body = user;
   } else {
-    ctx.throw('Not found', 404);
+    ctx.throw(404, 'Not found');
   }
 });
 
 router.put('/:id', async (ctx) => {
   let id = parseInt(ctx.params.id, 10);
   let user = ctx.request.body;
-  let updated = await usersData.update(id, user);
-  if (updated) {
-    ctx.body = true;
-  } else {
-    // ctx throw error 404
+  try {
+    await usersData.update(id, user);
+    ctx.status = 200;
+  } catch (err) {
+    if (err.message === 'Not found') {
+      ctx.throw(404, 'Not found');
+    } else {
+      throw err;
+    }
   }
 });
 
 router.delete('/:id', async (ctx) => {
   let id = parseInt(ctx.params.id, 10);
-  let removed = await usersData.remove(id);
-  if (removed) {
-    ctx.body = true;
-  } else {
-    // ctx throw error 404
+  try {
+    await usersData.delete(id);
+    ctx.status = 200;
+  } catch (err) {
+    if (err.message === 'Not found') {
+      ctx.throw(404, 'Not found');
+    } else {
+      throw err;
+    }
   }
 });
 
 router.post('/populate', async (ctx) => {
-  ctx.body = await usersData.populate();
+  let count = ctx.request.body.count;
+  await usersData.populate(count);
+  ctx.status = 201;
 });
-
 
 module.exports = router;

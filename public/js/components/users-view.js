@@ -12,8 +12,8 @@ const userList = {
       return [
         m(usersList, { users, onSelectUser: this.selectUser, onRemoveUser: this.removeUser }),
         m('a[href=/add]', { oncreate: m.route.link }, 'Add'),
-        m('br'),
-        m('a[href=#]', { onclick: this.populateUsers.bind(this) }, 'Populate')
+        m('span', ' or '),
+        m('a[href=#]', { onclick: this.populateUsers.bind(this) }, 'Add random')
       ];
     } else if (users.hasError()) {
       return m('h3', 'Error: ' + users.error.message);
@@ -27,7 +27,7 @@ const userList = {
   },
   populateUsers(e) {
     e.preventDefault();
-    usersRepository.populate();
+    usersRepository.populate(5);
   }
 };
 

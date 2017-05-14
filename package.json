@@ -4,14 +4,20 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "mocha -c ./test/index.js"
   },
   "dependencies": {
     "ajv": "^5.0.1",
+    "config": "^1.26.1",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "next",
     "koa-static": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.3.0"
   }
 }

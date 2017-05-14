@@ -61,21 +61,45 @@ const usersRepository = {
     return m.request({
       method: 'put',
       url: apiAddress + '/users/' + user.value.id,
-      data: user.value
+      data: user.value,
+      extract
     }).then(() => this.reload())
   },
   remove(id) {
     return m.request({
       method: 'delete',
-      url: apiAddress + '/users/' + id
+      url: apiAddress + '/users/' + id,
+      extract
     }).then(() => this.reload())
   },
-  populate() {
+  populate(count) {
     return m.request({
       method: 'post',
-      url: apiAddress + '/users/populate'
-    }).then(() => this.reload())
+      url: apiAddress + '/users/populate',
+      data: { count },
+      extract
+    }).then(() => this.reload());
   }
 };
+
+function deserialize(data, raise) {
+  try {
+    return data !== '' ? JSON.parse(data) : null;
+  } catch (e) {
+    if (raise) {
+      throw new Error(data);
+    } else {
+      return null;
+    }
+  }
+}
+
+function extract(xhr) {
+  if (xhr.status >= 200 && xhr.status < 300) {
+    return deserialize(xhr.responseText, false);
+  } else {
+    return deserialize(xhr.responseText, true);
+  }
+}
 
 module.exports = usersRepository;

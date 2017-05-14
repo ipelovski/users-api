@@ -12,7 +12,6 @@ const router = new Router();
 
 router.use('/api', apiRouter.routes(), apiRouter.allowedMethods());
 router.get('/*', index);
-// router.get('/index.html', index);
 
 let indexFileContents = null;
 async function index (ctx) {
