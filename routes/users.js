@@ -20,7 +20,7 @@ router.get('/:id', async (ctx) => {
   if (user !== null) {
     ctx.body = user;
   } else {
-    // ctx throw error 404
+    ctx.throw('Not found', 404);
   }
 });
 

@@ -23,7 +23,7 @@ const editUser = {
         ]
       }), vnode.children);
     } else if (user.hasError()) {
-      return m('h3', 'Error: ' + user.error);
+      return m('h3', 'Error: ' + user.error.message);
     }
   }
 };

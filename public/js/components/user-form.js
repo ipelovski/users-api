@@ -5,7 +5,7 @@ const ViewModel = require('../view-model');
 const userForm = {
   oninit(vnode) {
     this.user = vnode.attrs.user;
-    this.userVM = new ViewModel(this.user.value);
+    this.userVM = ViewModel.fromData(this.user);
     this.onSubmit = vnode.attrs.onSubmit;
   },
   view(vnode) {
@@ -16,24 +16,24 @@ const userForm = {
         m('table', m('tbody', [
           m('tr', [
             m('td', [m('label', 'ID:')]),
-            m('td', [m('span', this.user.value.id)])
+            m('td', [m('span', this.userVM.id)])
           ]),
           m('tr', [
             m('td', [m('label[for=forename]', 'Forename:')]),
             m('td', [m('input#forename[type=text]', {
-              value: this.user.value.forename
+              value: this.userVM.forename
             })])
           ]),
           m('tr', [
             m('td', [m('label[for=surname]', 'Surname:')]),
             m('td', [m('input#surname[type=text]', {
-              value: this.user.value.surname
+              value: this.userVM.surname
             })])
           ]),
           m('tr', [
             m('td', [m('label[for=email]', 'Email:')]),
             m('td', [m('input#email[type=text]', {
-              value: this.user.value.email
+              value: this.userVM.email
             })])
           ])
         ])),

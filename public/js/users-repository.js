@@ -50,6 +50,8 @@ const usersRepository = {
         })
         .then((value) => {
           this.tempUsers.set(value.id, Data.withValue(value));
+        }, (error) => {
+          this.tempUsers.set(id, Data.withError(error));
         });
 
       return Data.pending();

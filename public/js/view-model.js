@@ -3,20 +3,24 @@
 const Data = require('./data');
 
 function ViewModel(value = {}) {
-  this.value = value;
+  Object.assign(this, value);
 }
 
 ViewModel.prototype.bindings = function () {
   return {
     onchange: (e) => {
       let propertyName = e.target.name || e.target.id;
-      this.value[propertyName] = e.target.value;
+      this[propertyName] = e.target.value;
     }
   };
 };
 
+ViewModel.fromData = function (data) {
+  return new ViewModel(Object.assign({}, data.value));
+};
+
 ViewModel.prototype.toData = function () {
-  return Data.withValue(this.value);
+  return Data.withValue(this);
 };
 
 module.exports = ViewModel;

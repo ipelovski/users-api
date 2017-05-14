@@ -16,7 +16,7 @@ const userList = {
         m('a[href=#]', { onclick: this.populateUsers.bind(this) }, 'Populate')
       ];
     } else if (users.hasError()) {
-      return m('h3', 'Error: ' + users.error);
+      return m('h3', 'Error: ' + users.error.message);
     }
   },
   selectUser(user) {
