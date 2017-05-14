@@ -23,8 +23,7 @@ const usersList = {
   tableHeader() {
     return m('thead', m('tr', [
       m('th', 'ID'),
-      m('th', 'Forename'),
-      m('th', 'Surname'),
+      m('th', 'Full Name'),
       m('th', 'Email')
     ]));
   },
@@ -35,8 +34,10 @@ const usersList = {
   tableRow(user) {
     return m('tr', { key: user.id }, [
       m('td', user.id),
-      m('td', m('a[href=#]', { onclick: this.selectUser(user) }, user.forename)),
-      m('td', m('a[href=#]', { onclick: this.selectUser(user) }, user.surname)),
+      m('td',
+        m('a[href=#]', {
+          onclick: this.selectUser(user)
+        }, user.forename + ' ' + user.surname)),
       m('td', m('a', { href: 'mailto:' + user.email }, user.email)),
       m('td', m('a[href=#]', { onclick: this.removeUser(user) }, 'Remove')),
     ]);

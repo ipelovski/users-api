@@ -162,6 +162,7 @@ describe('Users', function () {
       expect(res).to.have.status(200);
       storedUser = await users.get(storedUser.id);
       expect(storedUser).to.exist;
+      user.updated = storedUser.updated;
       expect(storedUser).to.deep.equal(user);
     });
 

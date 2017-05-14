@@ -23,6 +23,7 @@ const repository = {
   async add(user) {
     validate(user, userValidator);
     user.id = users.length;
+    user.created = user.updated = Date.now();
     users.push(user);
     return user;
   },
@@ -40,7 +41,11 @@ const repository = {
     validate(user, userValidator);
     let index = users.findIndex((user) => user.id === id);
     if (index >= 0) {
-      Object.assign(users[index], user);
+      let storedUser = users[index];
+      user.id = storedUser.id;
+      user.created = storedUser.created;
+      user.updated = Date.now();
+      Object.assign(storedUser, user);
     } else {
       throw new Error('Not found');
     }
@@ -66,7 +71,7 @@ const repository = {
 };
 
 const forenames = `Tosho Gosho Racho Tzonko Petko Tzvetko Risto Kozma
-Penko Pencho Velyo Mityo Simo Nedko Mancho Haralampiy`.split(/\s/);
+Penko Pencho Velyo Mityo Simo Nedko Mancho Haralampi`.split(/\s/);
 const surnames = `Toshev Goshev Rachev Tzonkov Petkov Tzvetkov Ristov Kozmov
 Penkov Penchev Velyov Mitev Simov Nedkov Manchov Haralampiev`.split(/\s/);
 function randomUser() {
@@ -90,7 +95,5 @@ function getRandomInt(min, max) {
   }
   return Math.floor(Math.random() * (max - min)) + min;
 }
-
-// repository.populate(5).catch(console.error.bind(null, 'Population error:'));
 
 module.exports = repository;
