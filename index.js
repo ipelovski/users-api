@@ -9,6 +9,7 @@ const router = require('./routes/index');
 
 const publicDirPath = path.resolve(__dirname, 'public');
 const app = new Koa();
+const port = process.env.$PORT || config.port;
 
 app.use(async (ctx, next) => {
   try {
@@ -32,6 +33,8 @@ app.on('error', (err) => {
   }
 });
 
-app.listen(config.port);
+app.listen(port);
+
+// TODO Add webpack and production env
 
 module.exports = app;
