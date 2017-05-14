@@ -8,7 +8,7 @@ function ViewModel(value = {}) {
 
 ViewModel.prototype.bindings = function () {
   return {
-    onchange: (e) => {
+    oninput: (e) => {
       let propertyName = e.target.name || e.target.id;
       this[propertyName] = e.target.value;
     }

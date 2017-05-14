@@ -26,11 +26,11 @@ const searchUsers = {
           ? m(usersList, {
             users,
             onSelectUser: this.selectUser,
-            onRemoveUser: this.removeUser
+            onRemoveUser: this.removeUser.bind(this)
           })
           : m('div', 'No users found')
         ),
-        m('a[href=/]', { oncreate: m.route.link }, 'Back'),
+        m('a[href=/]', { oncreate: m.route.link }, 'Back to list'),
       ];
     } else if (users.hasError()) {
       return m('h3', 'Error: ' + users.error.message);
@@ -43,7 +43,11 @@ const searchUsers = {
     m.route.set('/edit/' + user.id);
   },
   removeUser(user) {
-    usersRepository.remove(user.id);
+    usersRepository.remove(user.id)
+      .then(() => {
+        usersRepository.search(this.searchText)
+          .then((users) => this.users = users);
+      });
   },
   populateUsers(e) {
     e.preventDefault();

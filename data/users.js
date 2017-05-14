@@ -18,6 +18,7 @@ const isString = ajv.compile({
 });
 
 const users = [];
+let userId = 0;
 
 const repository = {
   async all() {
@@ -44,7 +45,8 @@ const repository = {
   },
   async add(user) {
     validate(user, userValidator);
-    user.id = users.length;
+    user.id = userId;
+    userId += 1;
     user.created = user.updated = Date.now();
     users.push(user);
     return user;

@@ -7,19 +7,19 @@ const apiAddress = config.apiAddress;
 
 const usersRepository = {
   users: new Data(),
-  tempUsers: new Map(),
   listToMap(list) {
     return list.reduce((m, v) => m.set(v.id, v), new Map());
   },
   all() {
-    if (this.users.value === null) {
-        m.request({
-            method: 'get',
-            url: apiAddress + '/users'
-          })
-          .then(
-            (value) => this.users = Data.withValue(this.listToMap(value)),
-            (error) => this.users = Data.withError(error));
+    if (this.users.isEmpty()) {
+      this.users = Data.pending();
+      m.request({
+          method: 'get',
+          url: apiAddress + '/users'
+        })
+        .then(
+          (value) => this.users = Data.withValue(this.listToMap(value)),
+          (error) => this.users = Data.withError(error));
     }
     return this.users;
   },
@@ -30,25 +30,29 @@ const usersRepository = {
   get(id) {
     if (this.users.hasValue()) {
       if (this.users.value.has(id)) {
-        return Data.withValue(this.users.value.get(id));
+        return stream(Data.withValue(this.users.value.get(id)));
       } else {
-        return Data.withError('Not found');
+        return stream(Data.withError('Not found'));
       }
-    } else if (this.tempUsers.has(id)) {
-      return this.tempUsers.get(id);
     } else {
+      let stream2 = stream(Data.pending());
       m.request({
           method: 'get',
           url: apiAddress + '/users/' + id
         })
-        .then((value) => {
-          this.tempUsers.set(value.id, Data.withValue(value));
-        }, (error) => {
-          this.tempUsers.set(id, Data.withError(error));
-        });
+        .then(
+          (value) => stream2(Data.withValue(value)),
+          (error) => stream2(Data.withError(error)));
 
-      return Data.pending();
+      return stream2;
     }
+  },
+  emptyUser() {
+    return {
+      forename: '',
+      surname: '',
+      email: '',
+    };
   },
   search(text) {
     return m.request({
@@ -76,7 +80,7 @@ const usersRepository = {
       method: 'delete',
       url: apiAddress + '/users/' + id,
       extract
-    }).then(() => this.reload())
+    }).then(() => this.reload());
   },
   populate(count) {
     return m.request({

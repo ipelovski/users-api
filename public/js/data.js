@@ -16,8 +16,8 @@ Data.withValue = function (value) {
   return new Data(State.ready, value);
 };
 
-Data.withError = function (error) {
-  return new Data(State.error, null, error);
+Data.withError = function (error, value) {
+  return new Data(State.error, value, error);
 };
 
 Data.pending = function () {
@@ -34,6 +34,10 @@ Data.prototype.hasError = function () {
 
 Data.prototype.isPending = function () {
   return this.state === State.pending;
+};
+
+Data.prototype.isEmpty = function () {
+  return this.state === State.ready && this.value === null;
 };
 
 module.exports = Data;

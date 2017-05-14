@@ -6,14 +6,16 @@ const userForm = require('./user-form');
 
 const addUser = {
   oninit() {
-    this.user = Data.withValue({});
+    this.user = stream(Data.withValue(usersRepository.emptyUser()));
   },
   view(vnode) {
     return m(userForm, Object.assign(vnode.attrs, {
       user: this.user,
       onSubmit: (userVM) => {
+        m.route.set(m.route.get(), null, { replace: true });
         usersRepository.add(userVM.toData())
-          .then(() => m.route.set('/'));
+          .then(() => m.route.set('/'),
+            (error) => this.user(Data.withError(error, this.user().value)));
       },
       buttons: [
         m('button', 'Add')

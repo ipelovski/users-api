@@ -12,7 +12,9 @@ router.use(async (ctx, next) => {
   } catch (err) {
     if (err instanceof ValidationError) {
       ctx.status = 400;
-      ctx.body = err.errors;
+      ctx.body = {
+        errors: err.errors
+      };
       ctx.app.emit('error', err, ctx);
     } else {
       throw err;
