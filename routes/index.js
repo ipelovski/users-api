@@ -5,10 +5,11 @@ const path = require('path');
 const Router = require('koa-router');
 const apiRouter = require('./api');
 const ask = require('../lib/ask');
-const config = require('../config');
+const config = require('config');
 
 const indexFilePath = path.resolve(__dirname, '..', 'views', 'index.html');
 const router = new Router();
+const apiAddress = `//${config.path}:${config.port}/api`;
 
 router.use('/api', apiRouter.routes(), apiRouter.allowedMethods());
 router.get('/*', index);
@@ -18,7 +19,7 @@ async function index (ctx) {
   if (indexFileContents === null) {
     let indexFile = await ask(fs, 'readFile', indexFilePath);
     indexFileContents = new Function ('state', `return \`${indexFile}\``)({
-      apiAddress: config.apiAddress
+      apiAddress: apiAddress
     });
   }
   ctx.body = indexFileContents;
