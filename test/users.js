@@ -131,8 +131,9 @@ describe('Users', function () {
       
       expect(error).to.exist;
       expect(error).to.have.status(400);
-      expect(error.response.body).to.have.length(1);
-      expect(error.response.body[0].keyword).to.equal('minimum');
+      let errors = error.response.body.errors;
+      expect(errors).to.have.length(1);
+      expect(errors[0].keyword).to.equal('minimum');
     });
   });
 
@@ -179,9 +180,10 @@ describe('Users', function () {
       
       expect(error).to.exist;
       expect(error).to.have.status(400);
-      expect(error.response.body).to.have.length(1);
-      expect(error.response.body[0].dataPath).to.equal('/forename');
-      expect(error.response.body[0].keyword).to.equal('minLength');
+      let errors = error.response.body.errors;
+      expect(errors).to.have.length(1);
+      expect(errors[0].dataPath).to.equal('/forename');
+      expect(errors[0].keyword).to.equal('minLength');
     });
   });
 
@@ -245,9 +247,10 @@ describe('Users', function () {
 
       expect(error).to.exist;
       expect(error).to.have.status(400);
-      expect(error.response.body).to.have.length(1);
-      expect(error.response.body[0].dataPath).to.equal('/forename');
-      expect(error.response.body[0].keyword).to.equal('minLength');
+      let errors = error.response.body.errors;
+      expect(errors).to.have.length(1);
+      expect(errors[0].dataPath).to.equal('/forename');
+      expect(errors[0].keyword).to.equal('minLength');
     });
   });
 

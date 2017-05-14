@@ -82,6 +82,7 @@ const repository = {
   },
   async clear() {
     users.length = 0;
+    userId = 0;
   },
 };
 
