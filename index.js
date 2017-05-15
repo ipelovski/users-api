@@ -35,6 +35,4 @@ app.on('error', (err) => {
 
 app.listen(port);
 
-// TODO Add webpack and production env
-
 module.exports = app;

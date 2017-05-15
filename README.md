@@ -18,6 +18,10 @@ To run the tests in the project type:
 ```
 yarn test
 ```
+To create a bundle for the client scripts:
+```
+yarn run bundle
+```
 
 ##### Requirements
 Node v. 7.10.0, Chrome 58 or Firefox 53
