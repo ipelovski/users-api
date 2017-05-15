@@ -15,15 +15,26 @@ const apiAddress = config.port ?
 router.use('/api', apiRouter.routes(), apiRouter.allowedMethods());
 router.get('/*', index);
 
+const appScripts = getStartScripts();
 let indexFileContents = null;
 async function index (ctx) {
   if (indexFileContents === null) {
     let indexFile = await ask(fs, 'readFile', indexFilePath);
     indexFileContents = new Function ('state', `return \`${indexFile}\``)({
-      apiAddress: apiAddress
+      apiAddress,
+      appScripts
     });
   }
   ctx.body = indexFileContents;
+}
+
+function getStartScripts() {
+  if (process.env.NODE_ENV === 'production') {
+    return `<script type="text/javascript" src="/js/app.bundle.js"></script>`;
+  } else {
+    return `<script type="text/javascript" src="/js/simple-require.js"></script>
+<script type="text/javascript" src="/js/index.js"></script>`;
+  }
 }
 
 module.exports = router;
