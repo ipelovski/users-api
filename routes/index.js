@@ -9,7 +9,8 @@ const config = require('config');
 
 const indexFilePath = path.resolve(__dirname, '..', 'views', 'index.html');
 const router = new Router();
-const apiAddress = `//${config.path}:${config.port}/api`;
+const apiAddress = config.port ?
+  `//${config.path}:${config.port}/api` : `//${config.path}/api`;
 
 router.use('/api', apiRouter.routes(), apiRouter.allowedMethods());
 router.get('/*', index);

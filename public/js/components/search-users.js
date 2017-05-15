@@ -14,27 +14,38 @@ const searchUsers = {
   },
   view() {
     let users = this.users;
-    if (users.isPending()) {
-      return m('h3', 'Loading...');
-    } else if (users.hasValue()) {
-      return [
-        m(searchBox, {
-          onSearch: this.search.bind(this),
-          searchText: this.searchText
-        }),
-        (users.value.size > 0
-          ? m(usersList, {
-            users,
-            onSelectUser: this.selectUser,
-            onRemoveUser: this.removeUser.bind(this)
-          })
-          : m('div', 'No users found')
-        ),
-        m('a[href=/]', { oncreate: m.route.link }, 'Back to list'),
-      ];
-    } else if (users.hasError()) {
-      return m('h3', 'Error: ' + users.error.message);
-    }
+    return m('.panel.panel-default.text-center', (() => {
+      if (users.isPending()) {
+        return m('.panel-heading', m('.h4', 'Loading...'));
+      } else if (users.hasValue()) {
+        return m('.panel-body', [
+          m(searchBox, {
+            class: 'slightly-bottomful',
+            onSearch: this.search.bind(this),
+            searchText: this.searchText
+          }),
+          (users.value.size > 0
+            ? m(usersList, {
+              users,
+              onSelectUser: this.selectUser,
+              onRemoveUser: this.removeUser.bind(this)
+            })
+            : m('.panel.panel-default', [
+                m('.panel-body', [
+                  m('.h3', 'No users found')
+                ])
+              ])
+          ),
+          m('.bottomful',
+            m('a.btn.btn-default[href=/]', {
+              oncreate: m.route.link
+            }, 'Back to list')
+          ),
+        ]);
+      } else if (users.hasError()) {
+        return m('.panel-heading', m('.h4', 'Error: ' + users.error.message));
+      }
+    })());
   },
   search(text) {
     m.route.set('/search/' + text);

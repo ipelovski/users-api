@@ -8,14 +8,16 @@ const searchBox = {
     this.searchVM = new ViewModel({ searchText });
     this.onSearch = vnode.attrs.onSearch;
   },
-  view() {
-    return m('form', { onsubmit: this.search.bind(this) }, [
-      m('input#searchText[type=text]', Object.assign({
-        placeholder: 'Search...',
-        value: this.searchVM.searchText,
-      }, this.searchVM.bindings())),
-      m('button', 'Search'),
-    ]);;
+  view(vnode) {
+    return m('div', vnode.attrs,
+      m('form.form-inline', { onsubmit: this.search.bind(this) }, [
+        m('input#searchText.form-control[type=text]', Object.assign({
+          placeholder: 'Search...',
+          value: this.searchVM.searchText,
+        }, this.searchVM.bindings())),
+        m('button.btn.btn-default', 'Search'),
+      ])
+    );
   },
   search(e) {
     e.preventDefault();

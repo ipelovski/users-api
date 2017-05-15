@@ -20,7 +20,7 @@ yarn test
 ```
 
 ##### Requirements
-Node v. 7.10.0, Chrome 58
+Node v. 7.10.0, Chrome 58 or Firefox 53
 
 ##### Description
 The project is quite simple. Here is its structure:

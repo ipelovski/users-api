@@ -8,13 +8,15 @@ const usersList = {
   view(vnode) {
     let users = vnode.attrs.users;
     if (users.hasValue()) {
-      return [
-        m('h3', 'Users'),
-        m('table', [
-          this.tableHeader(),
-          this.tableBody(this.toList(users.value))
-        ]),
-      ];
+      return m('.panel.panel-default', [
+        m('.panel-heading', m('.h4', 'Users')),
+        m('.panel-body',
+          m('table.table.table-striped.table-hover', [
+            this.tableHeader(),
+            this.tableBody(this.toList(users.value))
+          ])
+        ),
+      ]);
     }
   },
   toList(map) {
@@ -24,7 +26,8 @@ const usersList = {
     return m('thead', m('tr', [
       m('th', 'ID'),
       m('th', 'Full Name'),
-      m('th', 'Email')
+      m('th', 'Email'),
+      m('th', 'Actions'),
     ]));
   },
   tableBody(users) {
@@ -39,7 +42,12 @@ const usersList = {
           onclick: this.selectUser(user)
         }, user.forename + ' ' + user.surname)),
       m('td', m('a', { href: 'mailto:' + user.email }, user.email)),
-      m('td', m('a[href=#]', { onclick: this.removeUser(user) }, 'Remove')),
+      m('td',
+        m('a.btn.btn-sm.btn-danger.glyphicon.glyphicon-remove-sign[href=#]', {
+          onclick: this.removeUser(user),
+          title: 'Remove',
+        })
+      ),
     ]);
   },
   selectUser(user) {

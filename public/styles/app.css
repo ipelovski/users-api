@@ -1,3 +1,15 @@
-.error {
-  color: maroon;
+.table th {
+   text-align: center;   
+}
+
+span.inter {
+  margin: 0 20px;
+}
+
+.bottomful {
+  margin-bottom: 20px;
+}
+
+.slightly-bottomful {
+  margin-bottom: 5px;
 }

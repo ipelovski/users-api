@@ -3,6 +3,7 @@
 const ViewModel = require('../view-model');
 const back = require('./back');
 const validationMessage = require('./validation-message');
+const validatedFormGroup = require('./validated-form-group');
 
 const userForm = {
   oninit(vnode) {
@@ -22,55 +23,56 @@ const userForm = {
       errors = this.user().error.errors
     }
     return [
-      m('form', Object.assign({
+      m('form.form-horizontal', Object.assign({
             onsubmit: this.submit.bind(this)
           }, this.userVM.bindings()), [
-        m('table', m('tbody', [
-          (isPersisted ?
-            m('tr', [
-              m('td', [m('label', 'ID:')]),
-              m('td', [m('span', this.userVM.id)])
-            ]) : null
-          ),
-          m('tr', [
-            m('td', [m('label[for=forename]', 'Forename:')]),
-            m('td', [
-              m('input#forename[type=text]', {
-                value: this.userVM.forename
-              })
-            ]),
-            m('td', [m(validationMessage, { errors, path: '/forename' })])
-          ]),
-          m('tr', [
-            m('td', [m('label[for=surname]', 'Surname:')]),
-            m('td', [m('input#surname[type=text]', {
+        (isPersisted ?
+          m('.form-group', [
+            m('label.control-label.col-sm-4', 'ID:'),
+            m('.col-sm-4', this.userVM.id)
+          ]) : null
+        ),
+        m(validatedFormGroup, { errors, path: '/forename' }, [
+          m('label.control-label.col-sm-4[for=forename]', 'Forename:'),
+          m('.col-sm-4',
+            m('input#forename.form-control[type=text]', {
+              value: this.userVM.forename
+            })
+          )
+        ]),
+        m(validatedFormGroup, { errors, path: '/surname' }, [
+          m('label.control-label.col-sm-4[for=surname]', 'Surname:'),
+          m('.col-sm-4',
+            m('input#surname.form-control[type=text]', {
               value: this.userVM.surname
-            })]),
-            m('td', [m(validationMessage, { errors, path: '/surname' })])
-          ]),
-          m('tr', [
-            m('td', [m('label[for=email]', 'Email:')]),
-            m('td', [m('input#email[type=text]', {
+            })
+          )
+        ]),
+        m(validatedFormGroup, { errors, path: '/email' }, [
+          m('label.control-label.col-sm-4[for=email]', 'Email:'),
+          m('.col-sm-4',
+            m('input#email.form-control[type=text]', {
               value: this.userVM.email
-            })]),
-            m('td', [m(validationMessage, { errors, path: '/email' })])
-          ]),
-          (isPersisted ?
-            m('tr', [
-              m('td', [m('label', 'Created at:')]),
-              m('td', [m('span', this.getDate(this.userVM.created))])
-            ]) : null
-          ),
-          (isPersisted ?
-            m('tr', [
-              m('td', [m('label', 'Last updated at:')]),
-              m('td', [m('span', this.getDate(this.userVM.updated))])
-            ]) : null
-          ),
-        ])),
-        vnode.attrs.buttons
+            })
+          )
+        ]),
+        (isPersisted ?
+          m('.form-group', [
+            m('label.control-label.col-sm-4', 'Created at:'),
+            m('.col-sm-4', this.getDate(this.userVM.created))
+          ]) : null
+        ),
+        (isPersisted ?
+          m('.form-group', [
+            m('label.control-label.col-sm-4', 'Last updated at:'),
+            m('.col-sm-4', this.getDate(this.userVM.updated))
+          ]) : null
+        ), [
+          vnode.attrs.buttons,
+          m('span.inter'),
+          m(back)
+        ]
       ]),
-      m(back),
     ];
   },
   submit(e) {
